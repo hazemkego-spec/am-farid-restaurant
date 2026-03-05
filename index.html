@@ -4,17 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>مطعم العم فريد</title>
+    <link rel="manifest" href="data:application/manifest+json,{"name":"3am Farid","short_name":"Farid","start_url":".","display":"standalone","background_color":"#F7E5CF","theme_color":"#9E4624"}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Cairo', sans-serif; background-color: #F7E5CF; padding-bottom: 90px; }
-        .active-tab { color: #9E4624; border-top: 4px solid #9E4624; background: white; transition: all 0.3s; }
-        .glass-nav { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
-        .category-card { transition: transform 0.2s; background: white; border-radius: 1.5rem; }
+        body { font-family: 'Cairo', sans-serif; background-color: #F7E5CF; -webkit-tap-highlight-color: transparent; }
+        .nav-tab.active { color: #9E4624; border-top: 4px solid #9E4624; background: #fff; }
+        .category-card { transition: all 0.2s; cursor: pointer; border-radius: 2rem; background: #fff; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
         .category-card:active { transform: scale(0.95); }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .animate-up { animation: slideUp 0.4s ease-out; }
     </style>
 </head>
 <body>
@@ -26,127 +28,150 @@
         const menuData = {
             sections: [
                 { id: "fataer", name: "فطاير حادق", icon: "🍕", items: [
-                    { name: "سجق بلدي", prices: { s: 110, m: 175, l: 210 } },
-                    { name: "سجق كيري", prices: { s: 155, m: 195, l: 235 } },
-                    { name: "لحم مفروم بلدي", prices: { s: 125, m: 175, l: 225 } },
-                    { name: "بسطرمة", prices: { s: 150, m: 225, l: 295 } },
-                    { name: "بسطرمة كيري", prices: { s: 175, m: 245, l: 265 } },
-                    { name: "سلامي", prices: { s: 90, m: 155, l: 210 } },
-                    { name: "رانش", prices: { s: 110, m: 175, l: 215 } },
-                    { name: "تشيكن باربيكيو", prices: { s: 125, m: 175, l: 220 } },
-                    { name: "تشيكن مشروم", prices: { s: 140, m: 180, l: 245 } },
-                    { name: "ميكس جبن", prices: { s: 115, m: 175, l: 225 } },
-                    { name: "ميكس لحوم", prices: { s: 145, m: 195, l: 245 } },
-                    { name: "ميكس فراخ", prices: { s: 115, m: 195, l: 250 } },
-                    { name: "العم فريد 1", desc: "كباب حلة + بصل مكرمل", prices: { s: 120, m: 175, l: 235 } },
-                    { name: "العم فريد 2", desc: "كفتة + موتزاريلا + حار", prices: { s: 120, m: 165, l: 210 } },
-                    { name: "العم فريد 3", desc: "شيش + خضار مشوي + موتزاريلا", prices: { s: 185, m: 245, l: 310 } }
+                    { name: "فطيرة سجق بلدي", prices: { s: 110, m: 175, l: 210 } },
+                    { name: "فطيرة سجق كيري", prices: { s: 155, m: 195, l: 235 } },
+                    { name: "فطيرة لحم مفروم بلدي", prices: { s: 125, m: 175, l: 225 } },
+                    { name: "فطيرة بسطرمة", prices: { s: 150, m: 225, l: 295 } },
+                    { name: "فطيرة بسطرمة كيري", prices: { s: 175, m: 245, l: 265 } },
+                    { name: "فطيرة سلامي", prices: { s: 90, m: 155, l: 210 } },
+                    { name: "فطيرة رانش", prices: { s: 110, m: 175, l: 215 } },
+                    { name: "فطيرة تشيكن باربيكيو", prices: { s: 125, m: 175, l: 220 } },
+                    { name: "فطيرة تشيكن مشروم", prices: { s: 140, m: 180, l: 245 } },
+                    { name: "فطيرة ميكس جبن", prices: { s: 115, m: 175, l: 225 } },
+                    { name: "فطيرة خضار مشروم", prices: { s: 115, m: 170, l: 195 } },
+                    { name: "فطيرة ميكس لحوم", prices: { s: 145, m: 195, l: 245 } },
+                    { name: "فطيرة تونة قطع", prices: { s: 160, m: 195, l: 225 } },
+                    { name: "فطيرة ميكس فراخ", prices: { s: 115, m: 195, l: 250 } },
+                    { name: "فطيرة العم فريد 1", desc: "كباب حلة+بصل مكرمل+فلفل الوان", prices: { s: 120, m: 175, l: 235 } },
+                    { name: "فطيرة العم فريد 2", desc: "كفتة+فلفل الوان+جبنة موتزاريلا+الصوص الحار", prices: { s: 120, m: 165, l: 210 } },
+                    { name: "فطيرة العم فريد 3", desc: "شيش طاووق+فلفل الوان+خضار مشوي+جبنة موتزاريلا", prices: { s: 185, m: 245, l: 310 } }
                 ]},
-                { id: "pizza", name: "بيتزا", icon: "🍕", items: [
-                    { name: "مارجريتا", prices: { s: 95, m: 120, l: 165 } },
-                    { name: "ميكس جبن", prices: { s: 110, m: 180, l: 210 } },
-                    { name: "سوبر سوبريم لحم", prices: { s: 135, m: 195, l: 230 } },
-                    { name: "تشيكن رانش", prices: { s: 125, m: 175, l: 230 } },
-                    { name: "بيتزا العم فريد 1", prices: { s: 120, m: 175, l: 225 } },
-                    { name: "بيتزا العم فريد 3", prices: { s: 195, m: 245, l: 310 } }
-                ]},
-                { id: "sarokh", name: "صاروخ", icon: "🌯", items: [
+                { id: "sarokh", name: "الصاروخ", icon: "🌯", items: [
                     { name: "صاروخ سجق بلدي", prices: { s: 110, m: 175 } },
+                    { name: "صاروخ سجق كيري", prices: { s: 155, m: 195 } },
+                    { name: "صاروخ لحمة مفرومة", prices: { s: 125, m: 175 } },
+                    { name: "صاروخ بسطرمة", prices: { s: 150, m: 225 } },
                     { name: "صاروخ بسطرمة كيري", prices: { s: 175, m: 245 } },
+                    { name: "صاروخ سلامي", prices: { s: 90, m: 155 } },
+                    { name: "صاروخ مشكل جبن", prices: { s: 110, m: 175 } },
+                    { name: "صاروخ مشروم خضار", prices: { s: 125, m: 175 } },
                     { name: "صاروخ ميكس لحوم", prices: { s: 140, m: 180 } },
+                    { name: "صاروخ ميكس فراخ", prices: { s: 115, m: 175 } },
                     { name: "صاروخ تونة", prices: { s: 115, m: 170 } }
                 ]},
-                { id: "pasta", name: "باستا", icon: "🍝", items: [
-                    { name: "الفريدو", price: 118 },
-                    { name: "فرن العم فريد", price: 117 },
-                    { name: "نجرسكو", price: 137 },
-                    { name: "اربياتا", price: 67 }
+                { id: "pizza", name: "البيتزا", icon: "🍕", items: [
+                    { name: "بيتزا مارجريتا", prices: { s: 95, m: 120, l: 165 } },
+                    { name: "بيتزا ميكس جبن", prices: { s: 110, m: 180, l: 210 } },
+                    { name: "بيتزا سوبر سوبريم لحم", prices: { s: 135, m: 195, l: 230 } },
+                    { name: "بيتزا سلامي", prices: { s: 110, m: 165, l: 195 } },
+                    { name: "بيتزا تشيكن باربيكيو", prices: { s: 110, m: 165, l: 195 } },
+                    { name: "بيتزا تشيكن رانش", prices: { s: 125, m: 175, l: 230 } },
+                    { name: "بيتزا سوبر سوبريم فراخ", prices: { s: 120, m: 175, l: 225 } },
+                    { name: "بيتزا العم فريد 1", prices: { s: 120, m: 175, l: 225 } },
+                    { name: "بيتزا العم فريد 2", prices: { s: 120, m: 185, l: 215 } },
+                    { name: "بيتزا العم فريد 3", prices: { s: 195, m: 245, l: 310 } }
                 ]},
-                { id: "sandwiches", name: "سندوتشات", icon: "🥪", items: [
-                    { name: "حواوشي كبير", price: 85 },
-                    { name: "تشيكن كرسبي", price: 95 },
-                    { name: "كفتة بلدي", price: 75 },
-                    { name: "برجر لحمة", price: 95 }
+                { id: "pasta", name: "الباستا", icon: "🍝", items: [
+                    { name: "الفريدو", price: 118, desc: "وايت صوص + مشروم + فراخ + صوص الجبنة الخاص" },
+                    { name: "مكرونة فرن العم فريد", price: 117, desc: "صوص البشاميل + لحمة مفرومة + موتزاريلا" },
+                    { name: "مكرونة سجق", price: 147, desc: "سجق + فلفل ألوان + إسبشيال صوص" },
+                    { name: "نجرسكو", price: 137, desc: "وايت صوص + مشروم + فراخ مشوية + موتزاريلا" },
+                    { name: "بولونيز", price: 117, desc: "إسباجيتي + لحمة مفرومة + صوص بارميزان" },
+                    { name: "اربياتا", price: 67, desc: "الصوص الأحمر الحار + زيتون" },
+                    { name: "مكرونة بشاميل ريد صوص", price: 147, desc: "بشاميل + ريد صوص + لحمة مفرومة + موتزاريلا" }
                 ]},
-                { id: "mashwyat", name: "مشويات", icon: "🍗", items: [
+                { id: "mashwy", name: "المشاوي والوجبات", icon: "🍗", items: [
                     { name: "وجبة ميكس فراخ + كفتة", price: 195 },
-                    { name: "فرخة كاملة مشوية", price: 360 },
-                    { name: "وجبة نص فرخة", price: 195 }
+                    { name: "وجبة كفتة", price: 185 },
+                    { name: "وجبة شيش", price: 180 },
+                    { name: "وجبة ربع فرخة صدر", price: 130 },
+                    { name: "وجبة ربع فرخة ورك", price: 105 },
+                    { name: "وجبة نص فرخة", price: 195 },
+                    { name: "فرخة كاملة", price: 360 },
+                    { name: "وجبة ربع فرخة فرن ورك", price: 100 },
+                    { name: "وجبة ربع فرخة فرن صدر", price: 120 },
+                    { name: "وجبة نص فرخة فرن", price: 190 },
+                    { name: "فرخة كاملة فرن", price: 360 }
                 ]},
-                { id: "sweet", name: "حلو", icon: "🍯", items: [
-                    { name: "كاسترد", prices: { s: 65, m: 80, l: 100 } },
-                    { name: "بلح وقشطة", prices: { s: 95, m: 125, l: 195 } },
-                    { name: "نوتيلا موز", prices: { s: 85, m: 125, l: 185 } }
+                { id: "sandwiches", name: "السندوتشات", icon: "🥪", items: [
+                    { name: "رغيف حواوشي صغير", price: 55 },
+                    { name: "رغيف حواوشي كبير", price: 85 },
+                    { name: "سندوتش تشيكن كرسبي", price: 95 },
+                    { name: "سندوتش فاهيتا فراخ", price: 95 },
+                    { name: "سندوتش كفتة فرنساوي", price: 95 },
+                    { name: "سندوتش كفتة بلدي", price: 75 },
+                    { name: "سندوتش شيش طاووق فرنساوي", price: 85 },
+                    { name: "سندوتش شيش طاووق بلدي", price: 75 },
+                    { name: "سندوتش برجر لحمة", price: 95 },
+                    { name: "سندوتش برجر فراخ", price: 95 }
+                ]},
+                { id: "sweet", name: "فطاير الحلو", icon: "🍯", items: [
+                    { name: "فطيرة بغاشة", prices: { m: 75, l: 95 } },
+                    { name: "فطيرة كاسترد", prices: { s: 65, m: 80, l: 100 } },
+                    { name: "فطيرة قرفة وكاسترد", prices: { s: 65, m: 85, l: 105 } },
+                    { name: "فطيرة بلح وقشطة", prices: { s: 95, m: 125, l: 195 } },
+                    { name: "فطيرة نوتيلا وكاسترد", prices: { s: 85, m: 125, l: 165 } },
+                    { name: "فطيرة نوتيلا موز", prices: { s: 85, m: 125, l: 185 } },
+                    { name: "فطيرة نوتيلا لوتس", prices: { s: 95, m: 165, l: 195 } },
+                    { name: "فطيرة كنافة", prices: { s: 95, m: 165, l: 195 } },
+                    { name: "فطيرة بسبوسة", prices: { s: 80, m: 110, l: 145 } },
+                    { name: "فطيرة فورسيزون", prices: { s: 105, m: 155, l: 195 } },
+                    { name: "فطيرة فواكه", prices: { s: 110, m: 165, l: 195 } }
                 ]}
             ],
             contact: {
-                whatsapp: "201122947479",
-                address: "6 أكتوبر - الحي الأول - شارع السنترال - 104 أبراج النخيل - أمام المعهد الديني"
+                whatsapp: "201113338098",
+                address: "6 أكتوبر - الحي الأول - شارع السنترال - 104 أبراج النخيل - امام المعهد الديني"
             }
         };
 
         function App() {
             const [activeTab, setActiveTab] = useState('home');
             const [cart, setCart] = useState([]);
-            const [clientInfo, setClientInfo] = useState({ name: '', address: '', location: '' });
-            const [showPWA, setShowPWA] = useState(true);
+            const [client, setClient] = useState({ name: '', address: '', loc: '' });
+            const [pwaMsg, setPwaMsg] = useState(true);
 
-            // إضافة للسلة
             const addToCart = (item, price, size = '') => {
-                const cartItem = { 
-                    ...item, 
-                    id: Date.now() + Math.random(), 
-                    selectedPrice: price, 
-                    selectedSize: size,
-                    note: '',
-                    qty: 1 
-                };
-                setCart([...cart, cartItem]);
+                const id = Date.now() + Math.random();
+                setCart([...cart, { ...item, id, selectedPrice: price, selectedSize: size, note: '' }]);
+                alert(`تمت إضافة ${item.name} ✅`);
             };
 
-            const updateNote = (id, note) => {
-                setCart(cart.map(i => i.id === id ? { ...i, note } : i));
-            };
+            const updateNote = (id, text) => setCart(cart.map(i => i.id === id ? { ...i, note: text } : i));
+            const remove = (id) => setCart(cart.filter(i => i.id !== id));
+            const total = () => cart.reduce((s, i) => s + i.selectedPrice, 0);
 
-            const removeFromCart = (id) => setCart(cart.filter(i => i.id !== id));
-
-            const getTotal = () => cart.reduce((sum, i) => sum + i.selectedPrice, 0);
-
-            // إرسال الواتساب
-            const sendOrder = () => {
-                if (!clientInfo.name || !clientInfo.address) return alert("من فضلك ادخل الاسم والعنوان");
-                
-                let orderNum = Math.floor(1000 + Math.random() * 9000);
+            const sendWhatsApp = () => {
+                if (!client.name || !client.address) return alert("الاسم والعنوان مطلوبين!");
+                let orderID = Math.floor(Math.random() * 9000) + 1000;
                 let msg = `🛍️ *طلب جديد من مطعم العم فريد*\n`;
-                msg += `رقم الطلب: ${orderNum}\n`;
+                msg += `رقم الطلب: ${orderID}\n`;
                 msg += `------------------------------\n`;
-                cart.forEach((item, index) => {
-                    msg += `${index + 1}. *${item.name}* ${item.selectedSize ? `(${item.selectedSize})` : ''}\n`;
+                cart.forEach((item, i) => {
+                    msg += `${i+1}. *${item.name}* ${item.selectedSize ? `(${item.selectedSize})` : ''}\n`;
                     msg += `   السعر: ${item.selectedPrice} ج.م\n`;
                     if(item.note) msg += `   📝 ملاحظة: ${item.note}\n`;
                 });
                 msg += `------------------------------\n`;
-                msg += `💰 *الإجمالي:* ${getTotal()} ج.م\n\n`;
-                msg += `👤 *العميل:* ${clientInfo.name}\n`;
-                msg += `🏠 *العنوان:* ${clientInfo.address}\n`;
-                if(clientInfo.location) msg += `📍 *الموقع:* ${clientInfo.location}\n`;
-                msg += `\nشكراً لطلبكم من العم فريد! ✨`;
-
+                msg += `💰 *الإجمالي:* ${total()} ج.م\n\n`;
+                msg += `👤 *العميل:* ${client.name}\n`;
+                msg += `🏠 *العنوان:* ${client.address}\n`;
+                if(client.loc) msg += `📍 *الموقع:* ${client.loc}\n`;
                 window.open(`https://wa.me/${menuData.contact.whatsapp}?text=${encodeURIComponent(msg)}`);
             };
 
             return (
-                <div className="max-w-md mx-auto relative min-h-screen">
-                    {/* رسالة PWA */}
-                    {showPWA && (
-                        <div className="fixed inset-x-0 bottom-24 z-50 px-4 animate-bounce">
-                            <div className="bg-white border-2 border-[#9E4624] p-4 rounded-3xl shadow-2xl relative">
-                                <button onClick={() => setShowPWA(false)} className="absolute top-2 right-4 text-gray-400">✕</button>
-                                <div className="flex items-center gap-3">
-                                    <img src="3am Farid.png" className="w-12 h-12 rounded-xl border border-gray-100" />
+                <div className="max-w-md mx-auto min-h-screen pb-24">
+                    {/* PWA Message */}
+                    {pwaMsg && (
+                        <div className="fixed inset-x-0 bottom-24 z-50 px-4 animate-up">
+                            <div className="bg-white border-2 border-[#9E4624] p-5 rounded-[2.5rem] shadow-2xl relative">
+                                <button onClick={() => setPwaMsg(false)} className="absolute top-4 left-6 text-gray-400">✕</button>
+                                <div className="flex items-center gap-4">
+                                    <img src="3am Farid.png" className="w-14 h-14 rounded-2xl" />
                                     <div>
-                                        <p className="text-xs font-bold text-[#9E4624]">تثبيت أبلكيشن العم فريد 📲</p>
-                                        <p className="text-[10px] text-gray-500">اضغط "مشاركة" ثم "إضافة للشاشة الرئيسية"</p>
+                                        <p className="text-sm font-black text-[#9E4624]">تثبيت تطبيق العم فريد 📲</p>
+                                        <p className="text-[11px] text-gray-500 leading-tight">اضغط على زر "مشاركة" ثم اختر "إضافة إلى الشاشة الرئيسية" لطلب أسهل.</p>
                                     </div>
                                 </div>
                             </div>
@@ -154,42 +179,40 @@
                     )}
 
                     {/* Header */}
-                    <header className="bg-[#9E4624] p-8 text-center rounded-b-[3.5rem] shadow-xl text-white">
-                        <img src="3am Farid.png" className="w-24 h-24 mx-auto mb-3 border-4 border-white rounded-full bg-white shadow-lg" />
-                        <h1 className="text-2xl font-black italic">العم فريد - 3am Farid</h1>
-                    </header>
+                    <div className="bg-[#9E4624] text-white p-10 text-center rounded-b-[4rem] shadow-xl">
+                        <img src="3am Farid.png" className="w-28 h-28 mx-auto mb-4 border-4 border-white rounded-full bg-white" />
+                        <h1 className="text-3xl font-black italic">العم فريد</h1>
+                    </div>
 
-                    <main className="p-4">
-                        {/* الصفحة الرئيسية - المربعات */}
+                    <div className="p-6 mt-4">
+                        {/* Main Grid */}
                         {activeTab === 'home' && (
-                            <div className="grid grid-cols-2 gap-4 mt-4">
-                                {menuData.sections.map(sec => (
-                                    <div key={sec.id} onClick={() => setActiveTab(sec.id)} className="category-card p-6 flex flex-col items-center justify-center shadow-md border-2 border-transparent hover:border-[#9E4624]">
-                                        <span className="text-4xl mb-2">{sec.icon}</span>
-                                        <span className="font-bold text-gray-800">{sec.name}</span>
+                            <div className="grid grid-cols-2 gap-5">
+                                {menuData.sections.map(s => (
+                                    <div key={s.id} onClick={() => setActiveTab(s.id)} className="category-card p-8 flex flex-col items-center justify-center">
+                                        <span className="text-5xl mb-3">{s.icon}</span>
+                                        <span className="font-black text-gray-800 text-sm">{s.name}</span>
                                     </div>
                                 ))}
                             </div>
                         )}
 
-                        {/* صفحات الأقسام */}
+                        {/* Section View */}
                         {menuData.sections.some(s => s.id === activeTab) && (
-                            <div className="animate-fadeIn">
-                                <button onClick={() => setActiveTab('home')} className="mb-4 text-[#9E4624] font-bold">← رجوع</button>
-                                <h2 className="text-2xl font-black mb-6 text-[#9E4624]">{menuData.sections.find(s=>s.id===activeTab).name}</h2>
+                            <div>
+                                <button onClick={() => setActiveTab('home')} className="mb-6 font-bold text-[#9E4624]">← العودة للقائمة</button>
+                                <h2 className="text-2xl font-black mb-6 text-[#9E4624] border-r-4 border-[#9E4624] pr-3">{menuData.sections.find(s=>s.id===activeTab).name}</h2>
                                 {menuData.sections.find(s=>s.id===activeTab).items.map((item, i) => (
-                                    <div key={i} className="bg-white p-5 rounded-3xl shadow-sm mb-4 border-r-8 border-[#9E4624]">
-                                        <h3 className="font-bold text-lg">{item.name}</h3>
-                                        <p className="text-xs text-gray-400 mb-4">{item.desc}</p>
-                                        <div className="flex flex-wrap gap-2">
-                                            {item.prices ? Object.entries(item.prices).map(([size, price]) => (
-                                                <button key={size} onClick={() => {addToCart(item, price, size); alert('تمت الإضافة 🛒');}} 
-                                                className="bg-[#F1DCC2] text-[#9E4624] px-4 py-2 rounded-xl text-xs font-black">
-                                                    {size === 's' ? 'صغير' : size === 'm' ? 'وسط' : 'كبير'}: {price}ج
+                                    <div key={i} className="bg-white p-5 rounded-[2rem] shadow-sm mb-4">
+                                        <div className="font-black text-lg text-gray-800">{item.name}</div>
+                                        {item.desc && <div className="text-[10px] text-gray-400 mt-1 mb-3">{item.desc}</div>}
+                                        <div className="flex flex-wrap gap-2 mt-3">
+                                            {item.prices ? Object.entries(item.prices).map(([sz, p]) => (
+                                                <button key={sz} onClick={() => addToCart(item, p, sz)} className="bg-[#F7E5CF] text-[#9E4624] px-4 py-2 rounded-xl text-xs font-black border border-[#9E4624]/20">
+                                                    {sz==='s'?'صغير':sz==='m'?'وسط':'كبير'} : {p}ج
                                                 </button>
                                             )) : (
-                                                <button onClick={() => {addToCart(item, item.price); alert('تمت الإضافة 🛒');}} 
-                                                className="bg-[#9E4624] text-white px-6 py-2 rounded-xl font-bold">
+                                                <button onClick={() => addToCart(item, item.price)} className="bg-[#9E4624] text-white px-8 py-2 rounded-xl font-black">
                                                     إضافة {item.price} ج.م
                                                 </button>
                                             )}
@@ -199,74 +222,65 @@
                             </div>
                         )}
 
-                        {/* السلة */}
+                        {/* Cart View */}
                         {activeTab === 'cart' && (
-                            <div className="animate-fadeIn">
-                                <h2 className="text-2xl font-black mb-6 text-[#9E4624]">سلة الطلبات 🛍️</h2>
-                                {cart.length === 0 ? <p className="text-center py-20 text-gray-400 italic">السلة خالية.. اطلب من العم فريد الآن!</p> : (
+                            <div>
+                                <h2 className="text-2xl font-black mb-6 text-[#9E4624]">سلة طلباتك 🛒</h2>
+                                {cart.length === 0 ? <p className="text-center py-20 text-gray-400">السلة فاضية.. اطلب دلوقتي!</p> : (
                                     <>
-                                        {cart.map((item) => (
-                                            <div key={item.id} className="bg-white p-4 rounded-2xl mb-4 shadow-sm relative">
-                                                <div className="flex justify-between font-bold text-gray-800">
+                                        {cart.map(item => (
+                                            <div key={item.id} className="bg-white p-4 rounded-2xl mb-4 shadow-sm">
+                                                <div className="flex justify-between font-black text-gray-800">
                                                     <span>{item.name} {item.selectedSize && `(${item.selectedSize})`}</span>
-                                                    <span className="text-[#9E4624]">{item.selectedPrice} ج</span>
+                                                    <button onClick={() => remove(item.id)} className="text-red-500 text-xs">حذف</button>
                                                 </div>
-                                                <textarea 
-                                                    placeholder="أضف ملاحظاتك (بدون بصل، حار جداً...)"
-                                                    className="w-full mt-3 p-2 bg-gray-50 rounded-xl text-xs border-none focus:ring-1 focus:ring-[#9E4624]"
-                                                    rows="1"
-                                                    onChange={(e) => updateNote(item.id, e.target.value)}
-                                                ></textarea>
-                                                <button onClick={() => removeFromCart(item.id)} className="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full text-xs">✕</button>
+                                                <textarea placeholder="أضف ملاحظاتك هنا..." className="w-full mt-3 p-2 bg-gray-50 rounded-xl text-xs border-none" onChange={e => updateNote(item.id, e.target.value)} />
+                                                <div className="text-left font-black text-[#9E4624] mt-2">{item.selectedPrice} ج.م</div>
                                             </div>
                                         ))}
-                                        <div className="bg-white p-6 rounded-[2.5rem] mt-10 shadow-lg border-2 border-[#9E4624]">
-                                            <h3 className="font-black mb-4 underline">بياناتك للتوصيل:</h3>
-                                            <input placeholder="الاسم" className="w-full mb-3 p-3 rounded-xl bg-gray-50 border-none" onChange={e=>setClientInfo({...clientInfo, name: e.target.value})} />
-                                            <input placeholder="العنوان بالتفصيل" className="w-full mb-3 p-3 rounded-xl bg-gray-50 border-none" onChange={e=>setClientInfo({...clientInfo, address: e.target.value})} />
-                                            <input placeholder="رابط الموقع (من جوجل ماب)" className="w-full mb-6 p-3 rounded-xl bg-gray-50 border-none" onChange={e=>setClientInfo({...clientInfo, location: e.target.value})} />
-                                            <div className="text-xl font-black flex justify-between border-t pt-4 mb-6">
-                                                <span>الإجمالي:</span>
-                                                <span>{getTotal()} ج.م</span>
-                                            </div>
-                                            <button onClick={sendOrder} className="w-full bg-[#25D366] text-white py-4 rounded-2xl font-black text-xl shadow-xl">إرسال عبر واتساب ✅</button>
+                                        <div className="bg-white p-6 rounded-[2.5rem] mt-8 shadow-xl border-2 border-[#9E4624]">
+                                            <input placeholder="الاسم" className="w-full mb-3 p-3 rounded-xl bg-gray-50 border-none" onChange={e=>setClient({...client, name: e.target.value})} />
+                                            <input placeholder="العنوان بالتفصيل" className="w-full mb-3 p-3 rounded-xl bg-gray-50 border-none" onChange={e=>setClient({...client, address: e.target.value})} />
+                                            <input placeholder="رابط الموقع (اختياري)" className="w-full mb-6 p-3 rounded-xl bg-gray-50 border-none" onChange={e=>setClient({...client, loc: e.target.value})} />
+                                            <div className="flex justify-between text-xl font-black mb-6 border-t pt-4"><span>الإجمالي:</span><span>{total()} ج.م</span></div>
+                                            <button onClick={sendWhatsApp} className="w-full bg-[#25D366] text-white py-4 rounded-2xl font-black text-xl shadow-lg">أرسل الطلب للواتساب ✅</button>
                                         </div>
                                     </>
                                 )}
                             </div>
                         )}
 
-                        {/* تواصل معنا */}
+                        {/* Contact View */}
                         {activeTab === 'contact' && (
-                            <div className="text-center animate-fadeIn py-10 px-4">
-                                <img src="3am Farid.png" className="w-32 h-32 mx-auto mb-6 bg-white rounded-full p-2 shadow-2xl" />
-                                <h2 className="text-3xl font-black text-[#9E4624] mb-4">تواصل مع العم فريد</h2>
-                                <p className="text-gray-600 mb-8 italic">"طعم زمان، بأيدٍ مصرية أصيلة"</p>
-                                <div className="bg-white p-6 rounded-[3rem] shadow-md mb-6 border-t-8 border-[#9E4624]">
-                                    <p className="font-black text-gray-800 mb-2">🏠 عنواننا:</p>
-                                    <p className="text-sm text-gray-500 mb-6 leading-loose">{menuData.contact.address}</p>
-                                    <a href={`https://wa.me/${menuData.contact.whatsapp}`} className="block bg-[#25D366] text-white py-4 rounded-2xl font-black text-lg">واتساب المبيعات 📞</a>
+                            <div className="text-center py-10">
+                                <img src="3am Farid.png" className="w-32 h-32 mx-auto mb-6 rounded-full shadow-2xl p-2 bg-white" />
+                                <h2 className="text-3xl font-black text-[#9E4624] mb-2">تواصل معنا</h2>
+                                <p className="text-gray-500 italic mb-8">"أحلى فطيرة بيتزا من إيد العم فريد"</p>
+                                <div className="bg-white p-8 rounded-[3rem] shadow-md border-t-8 border-[#9E4624]">
+                                    <p className="font-black mb-2 text-gray-800 underline">📍 عنوانا:</p>
+                                    <p className="text-sm text-gray-500 leading-relaxed">{menuData.contact.address}</p>
+                                    <div className="flex gap-4 mt-8">
+                                        <a href="tel:01113338098" className="flex-1 bg-blue-500 text-white py-4 rounded-2xl font-bold">اتصل بنا</a>
+                                        <a href={`https://wa.me/${menuData.contact.whatsapp}`} className="flex-1 bg-[#25D366] text-white py-4 rounded-2xl font-bold">واتساب</a>
+                                    </div>
                                 </div>
                             </div>
                         )}
-                    </main>
+                    </div>
 
-                    {/* Navigation Tabs */}
-                    <nav className="fixed bottom-0 inset-x-0 glass-nav border-t flex justify-around py-3 z-40 shadow-[0_-10px_20px_rgba(0,0,0,0.05)]">
-                        <button onClick={() => setActiveTab('home')} className={`flex flex-col items-center gap-1 ${activeTab==='home'?'text-[#9E4624] font-bold':'text-gray-400'}`}>
-                            <span className="text-xl">🏠</span>
-                            <span className="text-[10px]">الرئيسية</span>
+                    {/* Bottom Navbar */}
+                    <div className="fixed bottom-0 inset-x-0 bg-white/90 backdrop-blur-md flex justify-around py-4 border-t border-gray-100 shadow-[0_-10px_30px_rgba(0,0,0,0.05)] z-40">
+                        <button onClick={() => setActiveTab('home')} className={`nav-tab flex flex-col items-center flex-1 ${activeTab==='home'?'active text-[#9E4624]':'text-gray-400'}`}>
+                            <span className="text-2xl">🏠</span><span className="text-[10px] font-bold mt-1">الرئيسية</span>
                         </button>
-                        <button onClick={() => setActiveTab('cart')} className={`flex flex-col items-center gap-1 relative ${activeTab==='cart'?'text-[#9E4624] font-bold':'text-gray-400'}`}>
-                            <span className="text-xl">🛒</span>
-                            <span className="text-[10px]">السلة</span>
-                            {cart.length > 0 && <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-bold">{cart.length}</span>}
+                        <button onClick={() => setActiveTab('cart')} className={`nav-tab flex flex-col items-center flex-1 relative ${activeTab==='cart'?'active text-[#9E4624]':'text-gray-400'}`}>
+                            <span className="text-2xl">🛒</span><span className="text-[10px] font-bold mt-1">السلة</span>
+                            {cart.length > 0 && <span className="absolute top-0 right-1/4 bg-red-500 text-white text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-black">{cart.length}</span>}
                         </button>
-                        <button onClick={() => setActiveTab('contact')} className={`flex flex-col items-center gap-1 ${activeTab==='contact'?'text-[#9E4624] font-bold':'text-gray-400'}`}>
-                            <span className="text-xl">📞</span>
-                            <span className="text-[10px]">تواصل معنا</span>
+                        <button onClick={() => setActiveTab('contact')} className={`nav-tab flex flex-col items-center flex-1 ${activeTab==='contact'?'active text-[#9E4624]':'text-gray-400'}`}>
+                            <span className="text-2xl">📞</span><span className="text-[10px] font-bold mt-1">تواصل معنا</span>
                         </button>
-                    </nav>
+                    </div>
                 </div>
             );
         }
