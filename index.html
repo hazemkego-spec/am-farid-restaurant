@@ -10,7 +10,9 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Cairo', sans-serif; background-color: #F7E5CF; }
+        body { font-family: 'Cairo', sans-serif; background-color: #F7E5CF; padding-bottom: 80px; }
+        .active-tab { color: #9E4624; border-top: 4px solid #9E4624; background: white; }
+        .glass-nav { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
     </style>
 </head>
 <body>
@@ -20,88 +22,129 @@
         const { useState } = React;
 
         const menuData = {
-            sections: [
-                { id: "fataer", name: "الفطاير الحادقة", items: [
-                    { name: "سجق بلدي", prices: { s: 110, m: 175, l: 210 } },
-                    { name: "سجق كيري", prices: { s: 155, m: 195, l: 235 } },
-                    { name: "فطيرة العم فريد 1", desc: "كباب حلة + بصل مكرمل", prices: { s: 120, m: 175, l: 235 } }
-                ]},
-                { id: "pizza", name: "البيتزا", items: [
-                    { name: "مارجريتا", prices: { s: 95, m: 120, l: 165 } },
-                    { name: "تشيكن باربيكيو", prices: { s: 110, m: 165, l: 195 } }
-                ]},
-                { id: "pasta", name: "المكرونة (باستا)", items: [
-                    { name: "الفريدو", desc: "وايت صوص + مشروم + فراخ", price: 118 },
-                    { name: "نجرسكو", desc: "وايت صوص + فراخ مشوية", price: 137 }
-                ]}
+            fataerHadak: [
+                { name: "سجق بلدي", prices: { s: 110, m: 175, l: 210 } },
+                { name: "سجق كيري", prices: { s: 155, m: 195, l: 235 } },
+                { name: "لحم مفروم بلدي", prices: { s: 125, m: 175, l: 225 } },
+                { name: "بسطرمة", prices: { s: 150, m: 225, l: 295 } },
+                { name: "بسطرمة كيري", prices: { s: 175, m: 245, l: 265 } },
+                { name: "سلامي", prices: { s: 90, m: 155, l: 210 } },
+                { name: "رانش", prices: { s: 110, m: 175, l: 215 } },
+                { name: "تشيكن باربيكيو", prices: { s: 125, m: 175, l: 220 } },
+                { name: "تشيكن مشروم", prices: { s: 140, m: 180, l: 245 } },
+                { name: "ميكس جبن", prices: { s: 115, m: 175, l: 225 } },
+                { name: "خضار مشروم", prices: { s: 115, m: 170, l: 195 } },
+                { name: "ميكس لحوم", prices: { s: 145, m: 195, l: 245 } },
+                { name: "تونة قطع", prices: { s: 160, m: 195, l: 225 } },
+                { name: "ميكس فراخ", prices: { s: 115, m: 195, l: 250 } },
+                { name: "العم فريد 1", desc: "كباب حلة + بصل مكرمل", prices: { s: 120, m: 175, l: 235 } },
+                { name: "العم فريد 2", desc: "كفتة + موتزاريلا + حار", prices: { s: 120, m: 165, l: 210 } },
+                { name: "العم فريد 3", desc: "شيش + خضار مشوي + موتزاريلا", prices: { s: 185, m: 245, l: 310 } }
             ],
-            contact: {
-                address: "6 أكتوبر - الحي الأول - شارع السنترال - 104 أبراج النخيل",
-                whatsapp: "201122947479"
-            }
+            pizza: [
+                { name: "مارجريتا", prices: { s: 95, m: 120, l: 165 } },
+                { name: "ميكس جبن", prices: { s: 110, m: 180, l: 210 } },
+                { name: "سوبر سوبريم لحم", prices: { s: 135, m: 195, l: 230 } },
+                { name: "سلامي", prices: { s: 110, m: 165, l: 195 } },
+                { name: "تشيكن باربيكيو", prices: { s: 110, m: 165, l: 195 } },
+                { name: "تشيكن رانش", prices: { s: 125, m: 175, l: 230 } },
+                { name: "سوبر سوبريم فراخ", prices: { s: 120, m: 175, l: 225 } },
+                { name: "بيتزا العم فريد 1", prices: { s: 120, m: 175, l: 225 } },
+                { name: "بيتزا العم فريد 2", prices: { s: 120, m: 185, l: 215 } },
+                { name: "بيتزا العم فريد 3", prices: { s: 195, m: 245, l: 310 } }
+            ],
+            pasta: [
+                { name: "الفريدو", desc: "وايت صوص + مشروم + فراخ", price: 118 },
+                { name: "فرن العم فريد", desc: "بشاميل + مفروم + موتزاريلا", price: 117 },
+                { name: "مكرونة سجق", price: 147 },
+                { name: "نجرسكو", price: 137 },
+                { name: "بولونيز", price: 117 },
+                { name: "اربياتا", price: 67 },
+                { name: "بشاميل ريد صوص", price: 147 }
+            ],
+            mashwyat: [
+                { name: "وجبة ميكس فراخ + كفتة", price: 195 },
+                { name: "وجبة كفتة", price: 185 },
+                { name: "وجبة شيش", price: 180 },
+                { name: "ربع فرخة صدر", price: 130 },
+                { name: "نص فرخة", price: 195 },
+                { name: "فرخة كاملة", price: 360 }
+            ],
+            sandwiches: [
+                { name: "حواوشي صغير", price: 55 },
+                { name: "حواوشي كبير", price: 85 },
+                { name: "تشيكن كرسبي", price: 95 },
+                { name: "فاهيتا فراخ", price: 95 },
+                { name: "كفتة فرنساوي", price: 95 },
+                { name: "برجر لحمة", price: 95 }
+            ],
+            sweet: [
+                { name: "كاسترد", prices: { s: 65, m: 80, l: 100 } },
+                { name: "بلح وقشطة", prices: { s: 95, m: 125, l: 195 } },
+                { name: "نوتيلا موز", prices: { s: 85, m: 125, l: 185 } },
+                { name: "كنافة", prices: { s: 95, m: 165, l: 195 } },
+                { name: "بسبوسة", prices: { s: 80, m: 110, l: 145 } }
+            ]
         };
 
         function App() {
-            const [page, setPage] = useState('home');
+            const [activeTab, setActiveTab] = useState('home');
 
-            if (page === 'home') {
-                return (
-                    <div className="flex flex-col items-center p-6 animate-fadeIn">
-                        <img src="3am Farid.png" className="w-40 h-40 mb-4 drop-shadow-xl" alt="لوجو" />
-                        <h1 className="text-3xl font-black text-[#9E4624] mb-8">مطعم العم فريد</h1>
-                        <div className="grid gap-4 w-full max-w-md">
-                            {menuData.sections.map(s => (
-                                <button key={s.id} onClick={() => setPage(s.id)} className="bg-[#9E4624] text-white p-5 rounded-2xl font-bold text-xl shadow-lg flex justify-between items-center">
-                                    {s.name} <span>←</span>
-                                </button>
-                            ))}
-                            <button onClick={() => setPage('contact')} className="bg-[#2B1A12] text-white p-5 rounded-2xl font-bold text-xl shadow-lg">
-                                📍 اطلب الآن / تواصل معنا
-                            </button>
-                        </div>
+            const Card = ({ item }) => (
+                <div className="bg-white p-4 rounded-2xl shadow-sm border-r-4 border-[#9E4624] mb-4">
+                    <h3 className="font-bold text-lg text-[#2B1A12]">{item.name}</h3>
+                    {item.desc && <p className="text-xs text-gray-500 mb-2">{item.desc}</p>}
+                    <div className="flex flex-wrap gap-2 mt-2">
+                        {item.prices ? (
+                            Object.entries(item.prices).map(([k, v]) => (
+                                <span key={k} className="bg-[#F1DCC2] text-[#9E4624] text-[10px] px-2 py-1 rounded-lg font-black">
+                                    {k === 's' ? 'صغير' : k === 'm' ? 'وسط' : 'كبير'}: {v}ج
+                                </span>
+                            ))
+                        ) : (
+                            <span className="bg-[#9E4624] text-white text-xs px-3 py-1 rounded-lg font-bold">{item.price} ج.م</span>
+                        )}
                     </div>
-                );
-            }
+                </div>
+            );
 
-            if (page === 'contact') {
-                return (
-                    <div className="p-6 text-center">
-                        <button onClick={() => setPage('home')} className="bg-[#9E4624] text-white px-6 py-2 rounded-full mb-8">رجوع للرئيسية</button>
-                        <div className="bg-white p-8 rounded-3xl shadow-xl border-2 border-[#9E4624]">
-                            <h2 className="text-2xl font-bold text-[#9E4624] mb-4 text-right">📍 عنواننا:</h2>
-                            <p className="text-right mb-8">{menuData.contact.address}</p>
-                            <a href={`https://wa.me/${menuData.contact.whatsapp}`} className="bg-[#25D366] text-white w-full py-4 rounded-xl font-bold flex justify-center items-center gap-2">
-                                📱 اطلب عبر الواتساب
-                            </a>
-                        </div>
-                    </div>
-                );
-            }
-
-            const currentSection = menuData.sections.find(s => s.id === page);
             return (
-                <div className="p-4">
-                    <button onClick={() => setPage('home')} className="bg-[#9E4624] text-white px-6 py-2 rounded-full mb-6">رجوع</button>
-                    <h2 className="text-2xl font-bold text-[#9E4624] mb-6 border-b-2 border-[#9E4624] pb-2">{currentSection.name}</h2>
-                    <div className="space-y-4">
-                        {currentSection.items.map((item, i) => (
-                            <div key={i} className="bg-white p-4 rounded-2xl shadow-md border-r-8 border-[#9E4624]">
-                                <h3 className="font-bold text-lg">{item.name}</h3>
-                                {item.desc && <p className="text-sm text-gray-500">{item.desc}</p>}
-                                <div className="mt-3 flex gap-2">
-                                    {item.prices ? (
-                                        Object.entries(item.prices).map(([k, v]) => (
-                                            <span key={k} className="bg-[#F1DCC2] text-[#9E4624] text-xs px-2 py-1 rounded font-bold">
-                                                {k === 's' ? 'صغير' : k === 'm' ? 'وسط' : 'كبير'}: {v}
-                                            </span>
-                                        ))
-                                    ) : (
-                                        <span className="bg-[#9E4624] text-white px-3 py-1 rounded text-sm">{item.price} ج.م</span>
-                                    )}
+                <div className="max-w-md mx-auto">
+                    {/* Header */}
+                    <div className="bg-[#9E4624] p-6 text-white text-center rounded-b-[3rem] shadow-xl">
+                        <img src="3am Farid.png" className="w-24 h-24 mx-auto mb-2 drop-shadow-lg bg-white rounded-full p-1" />
+                        <h1 className="text-2xl font-black">مطعم العم فريد</h1>
+                    </div>
+
+                    {/* Content Section */}
+                    <div className="p-4">
+                        {activeTab === 'home' && (
+                            <div className="text-center py-10">
+                                <h2 className="text-xl font-bold mb-4">أهلاً بك في منيو العم فريد</h2>
+                                <p className="text-gray-600 mb-6">اختار القسم من الشريط السفلي للتصفح</p>
+                                <div className="bg-white p-6 rounded-3xl shadow-md border-2 border-[#9E4624]">
+                                    <p className="font-bold text-[#9E4624]">📍 العنوان:</p>
+                                    <p className="text-sm">6 أكتوبر - الحي الأول - شارع السنترال - 104 أبراج النخيل - أمام المعهد الديني</p>
+                                    <a href="https://wa.me/201122947479" className="mt-4 inline-block bg-[#25D366] text-white px-8 py-3 rounded-full font-bold">اطلب واتساب الآن</a>
                                 </div>
                             </div>
-                        ))}
+                        )}
+                        {activeTab === 'fataer' && menuData.fataerHadak.map((item, i) => <Card key={i} item={item} />)}
+                        {activeTab === 'pizza' && menuData.pizza.map((item, i) => <Card key={i} item={item} />)}
+                        {activeTab === 'pasta' && menuData.pasta.map((item, i) => <Card key={i} item={item} />)}
+                        {activeTab === 'mashwyat' && menuData.mashwyat.map((item, i) => <Card key={i} item={item} />)}
+                        {activeTab === 'sweet' && menuData.sweet.map((item, i) => <Card key={i} item={item} />)}
                     </div>
+
+                    {/* Bottom Navigation Tabs */}
+                    <nav className="fixed bottom-0 left-0 right-0 glass-nav border-t flex justify-around text-[10px] font-bold py-2 shadow-2xl">
+                        <button onClick={() => setActiveTab('home')} className={`flex flex-col items-center p-2 ${activeTab === 'home' ? 'text-[#9E4624]' : 'text-gray-400'}`}>🏠<span>الرئيسية</span></button>
+                        <button onClick={() => setActiveTab('fataer')} className={`flex flex-col items-center p-2 ${activeTab === 'fataer' ? 'text-[#9E4624]' : 'text-gray-400'}`}>🍕<span>فطاير</span></button>
+                        <button onClick={() => setActiveTab('pizza')} className={`flex flex-col items-center p-2 ${activeTab === 'pizza' ? 'text-[#9E4624]' : 'text-gray-400'}`}>🍕<span>بيتزا</span></button>
+                        <button onClick={() => setActiveTab('pasta')} className={`flex flex-col items-center p-2 ${activeTab === 'pasta' ? 'text-[#9E4624]' : 'text-gray-400'}`}>🍝<span>باستا</span></button>
+                        <button onClick={() => setActiveTab('mashwyat')} className={`flex flex-col items-center p-2 ${activeTab === 'mashwyat' ? 'text-[#9E4624]' : 'text-gray-400'}`}>🍗<span>مشويات</span></button>
+                        <button onClick={() => setActiveTab('sweet')} className={`flex flex-col items-center p-2 ${activeTab === 'sweet' ? 'text-[#9E4624]' : 'text-gray-400'}`}>🍰<span>حلو</span></button>
+                    </nav>
                 </div>
             );
         }
