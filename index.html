@@ -101,7 +101,7 @@
                     { name: "فطيرة بسبوسة", prices: { s: 80, m: 110, l: 145 } }
                 ]}
             ],
-            contact: { whatsapp: "201113338098", address: "6 أكتوبر - الحي الأول - 104 أبراج النخيل" }
+            contact: { whatsapp: "201122947479", address: "6 أكتوبر - الحي الأول - 104 أبراج النخيل" }
         };
 
         function App() {
@@ -133,7 +133,7 @@
             };
 
             const sendWhatsApp = () => {
-                if (!client.name || !client.phone || !client.address || !client.loc) return alert("برجاء إكمال جميع البيانات ⚠️");
+                if (!client.name || !client.phone || !client.address || !client.loc) return alert("برجاء إكمال جميع البيانات (الاسم، الموبايل، العنوان، واللوكيشن) ⚠️");
                 let msg = `🛍️ *طلب جديد - مطعم العم فريد*\n`;
                 msg += `رقم الفاتورة: #${orderSerial}\n`;
                 msg += `------------------------------\n`;
@@ -154,7 +154,6 @@
 
             return (
                 <div className="max-w-md mx-auto min-h-screen">
-                    {/* إصلاح اللوجو: الهيدر بالصورة */}
                     <header className="bg-[#9E4624] text-white p-6 text-center rounded-b-[3rem] shadow-lg">
                         <img src="3am Farid.png" className="w-24 h-24 mx-auto mb-3 border-4 border-white rounded-full bg-white shadow-md" alt="لوجو العم فريد" />
                         <h1 className="text-2xl font-black">العم فريد - 3am Farid</h1>
@@ -225,7 +224,6 @@
                                         <input placeholder="الاسم" className="w-full mb-2 p-3 rounded-xl bg-gray-50 border-none" onChange={e=>setClient({...client, name: e.target.value})} />
                                         <input placeholder="الموبايل" className="w-full mb-2 p-3 rounded-xl bg-gray-50 border-none" onChange={e=>setClient({...client, phone: e.target.value})} />
                                         <input placeholder="العنوان بالتفصيل" className="w-full mb-2 p-3 rounded-xl bg-gray-50 border-none" onChange={e=>setClient({...client, address: e.target.value})} />
-                                        {/* زر اللوكيشن التلقائي */}
                                         <div className="relative mb-4">
                                             <input value={client.loc} readOnly placeholder="رابط اللوكيشن 📍" className="w-full p-3 rounded-xl bg-gray-100 border-none text-[10px] text-blue-600" />
                                             <button onClick={getLocation} className="absolute left-2 top-2 bg-[#9E4624] text-white px-3 py-1 rounded-lg text-[10px] font-bold">تحديد موقعي 🎯</button>
@@ -239,7 +237,7 @@
 
                         {activeTab === 'contact' && (
                             <div className="text-center py-10 bg-white rounded-3xl p-6 shadow-sm">
-                                <img src="3am Farid.png" className="w-24 h-24 mx-auto mb-4" />
+                                <img src="3am Farid.png" className="w-24 h-24 mx-auto mb-4" alt="لوجو العم فريد" />
                                 <h2 className="text-xl font-black text-[#9E4624] mb-2 text-right">📍 تواصل معنا</h2>
                                 <p className="text-right text-sm text-gray-600 mb-6">{menuData.contact.address}</p>
                                 <a href={`https://wa.me/${menuData.contact.whatsapp}`} className="block bg-[#25D366] text-white py-4 rounded-2xl font-black">واتساب المبيعات</a>
@@ -247,7 +245,7 @@
                         )}
                     </main>
 
-                    <nav className="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md flex justify-around py-4 border-t z-50">
+                    <nav className="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md flex justify-around py-4 border-t z-50 shadow-lg">
                         <button onClick={()=>setActiveTab('home')} className={`flex flex-col items-center flex-1 ${activeTab==='home'?'text-[#9E4624]':'text-gray-400'}`}>🏠<span className="text-[10px] font-bold">الرئيسية</span></button>
                         <button onClick={()=>setActiveTab('cart')} className={`flex flex-col items-center flex-1 relative ${activeTab==='cart'?'text-[#9E4624]':'text-gray-400'}`}>🛒<span className="text-[10px] font-bold">السلة</span>
                             {cart.length > 0 && <span className="absolute -top-1 right-1/4 bg-red-500 text-white text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-black">{cart.length}</span>}
