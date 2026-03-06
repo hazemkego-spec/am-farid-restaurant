@@ -4,19 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>مطعم العم فريد</title>
-    <link rel="manifest" href="data:application/manifest+json,{"name":"3am Farid","short_name":"Farid","start_url":".","display":"standalone","background_color":"#F7E5CF","theme_color":"#9E4624"}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Cairo', sans-serif; background-color: #F7E5CF; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Cairo', sans-serif; background-color: #F7E5CF; -webkit-tap-highlight-color: transparent; padding-bottom: 90px; }
         .nav-tab.active { color: #9E4624; border-top: 4px solid #9E4624; background: #fff; }
-        .category-card { transition: all 0.2s; cursor: pointer; border-radius: 2rem; background: #fff; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .category-card { transition: all 0.2s; background: #fff; border-radius: 1.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .category-card:active { transform: scale(0.95); }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .animate-up { animation: slideUp 0.4s ease-out; }
+        .add-feedback { animation: pop 0.3s ease-out; }
+        @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
@@ -72,26 +71,22 @@
                     { name: "بيتزا العم فريد 3", prices: { s: 195, m: 245, l: 310 } }
                 ]},
                 { id: "pasta", name: "الباستا", icon: "🍝", items: [
-                    { name: "الفريدو", price: 118, desc: "وايت صوص + مشروم + فراخ + صوص الجبنة الخاص" },
-                    { name: "مكرونة فرن العم فريد", price: 117, desc: "صوص البشاميل + لحمة مفرومة + موتزاريلا" },
-                    { name: "مكرونة سجق", price: 147, desc: "سجق + فلفل ألوان + إسبشيال صوص" },
-                    { name: "نجرسكو", price: 137, desc: "وايت صوص + مشروم + فراخ مشوية + موتزاريلا" },
-                    { name: "بولونيز", price: 117, desc: "إسباجيتي + لحمة مفرومة + صوص بارميزان" },
-                    { name: "اربياتا", price: 67, desc: "الصوص الأحمر الحار + زيتون" },
-                    { name: "مكرونة بشاميل ريد صوص", price: 147, desc: "بشاميل + ريد صوص + لحمة مفرومة + موتزاريلا" }
+                    { name: "الفريدو", price: 118, desc: "وايت صوص + مشروم + فراخ" },
+                    { name: "مكرونة فرن العم فريد", price: 117, desc: "صوص البشاميل + لحمة مفرومة" },
+                    { name: "مكرونة سجق", price: 147 },
+                    { name: "نجرسكو", price: 137 },
+                    { name: "بولونيز", price: 117 },
+                    { name: "اربياتا", price: 67 },
+                    { name: "مكرونة بشاميل ريد صوص", price: 147 }
                 ]},
-                { id: "mashwy", name: "المشاوي والوجبات", icon: "🍗", items: [
+                { id: "mashwy", name: "المشاوي", icon: "🍗", items: [
                     { name: "وجبة ميكس فراخ + كفتة", price: 195 },
                     { name: "وجبة كفتة", price: 185 },
                     { name: "وجبة شيش", price: 180 },
-                    { name: "وجبة ربع فرخة صدر", price: 130 },
-                    { name: "وجبة ربع فرخة ورك", price: 105 },
-                    { name: "وجبة نص فرخة", price: 195 },
-                    { name: "فرخة كاملة", price: 360 },
-                    { name: "وجبة ربع فرخة فرن ورك", price: 100 },
-                    { name: "وجبة ربع فرخة فرن صدر", price: 120 },
-                    { name: "وجبة نص فرخة فرن", price: 190 },
-                    { name: "فرخة كاملة فرن", price: 360 }
+                    { name: "ربع فرخة صدر", price: 130 },
+                    { name: "ربع فرخة ورك", price: 105 },
+                    { name: "نص فرخة", price: 195 },
+                    { name: "فرخة كاملة", price: 360 }
                 ]},
                 { id: "sandwiches", name: "السندوتشات", icon: "🥪", items: [
                     { name: "رغيف حواوشي صغير", price: 55 },
@@ -99,121 +94,105 @@
                     { name: "سندوتش تشيكن كرسبي", price: 95 },
                     { name: "سندوتش فاهيتا فراخ", price: 95 },
                     { name: "سندوتش كفتة فرنساوي", price: 95 },
-                    { name: "سندوتش كفتة بلدي", price: 75 },
-                    { name: "سندوتش شيش طاووق فرنساوي", price: 85 },
-                    { name: "سندوتش شيش طاووق بلدي", price: 75 },
-                    { name: "سندوتش برجر لحمة", price: 95 },
-                    { name: "سندوتش برجر فراخ", price: 95 }
+                    { name: "سندوتش برجر لحمة", price: 95 }
                 ]},
                 { id: "sweet", name: "فطاير الحلو", icon: "🍯", items: [
-                    { name: "فطيرة بغاشة", prices: { m: 75, l: 95 } },
                     { name: "فطيرة كاسترد", prices: { s: 65, m: 80, l: 100 } },
-                    { name: "فطيرة قرفة وكاسترد", prices: { s: 65, m: 85, l: 105 } },
-                    { name: "فطيرة بلح وقشطة", prices: { s: 95, m: 125, l: 195 } },
-                    { name: "فطيرة نوتيلا وكاسترد", prices: { s: 85, m: 125, l: 165 } },
                     { name: "فطيرة نوتيلا موز", prices: { s: 85, m: 125, l: 185 } },
-                    { name: "فطيرة نوتيلا لوتس", prices: { s: 95, m: 165, l: 195 } },
                     { name: "فطيرة كنافة", prices: { s: 95, m: 165, l: 195 } },
-                    { name: "فطيرة بسبوسة", prices: { s: 80, m: 110, l: 145 } },
-                    { name: "فطيرة فورسيزون", prices: { s: 105, m: 155, l: 195 } },
-                    { name: "فطيرة فواكه", prices: { s: 110, m: 165, l: 195 } }
+                    { name: "فطيرة بسبوسة", prices: { s: 80, m: 110, l: 145 } }
                 ]}
             ],
-            contact: {
-                whatsapp: "201113338098",
-                address: "6 أكتوبر - الحي الأول - شارع السنترال - 104 أبراج النخيل - امام المعهد الديني"
-            }
+            contact: { whatsapp: "201113338098", address: "6 أكتوبر - الحي الأول - 104 أبراج النخيل" }
         };
 
         function App() {
             const [activeTab, setActiveTab] = useState('home');
             const [cart, setCart] = useState([]);
-            const [client, setClient] = useState({ name: '', address: '', loc: '' });
-            const [pwaMsg, setPwaMsg] = useState(true);
+            const [client, setClient] = useState({ name: '', phone: '', address: '', loc: '' });
+            const [lastOrderNum, setLastOrderNum] = useState(1);
+            const [addedId, setAddedId] = useState(null);
 
             const addToCart = (item, price, size = '') => {
-                const id = Date.now() + Math.random();
-                setCart([...cart, { ...item, id, selectedPrice: price, selectedSize: size, note: '' }]);
-                alert(`تمت إضافة ${item.name} ✅`);
+                const itemKey = `${item.name}-${size}`;
+                const existing = cart.find(i => `${i.name}-${i.selectedSize}` === itemKey);
+                
+                if (existing) {
+                    setCart(cart.map(i => `${i.name}-${i.selectedSize}` === itemKey ? { ...i, qty: i.qty + 1 } : i));
+                } else {
+                    setCart([...cart, { ...item, selectedPrice: price, selectedSize: size, qty: 1, note: '' }]);
+                }
+                
+                setAddedId(`${item.name}-${size}`);
+                setTimeout(() => setAddedId(null), 800);
             };
 
-            const updateNote = (id, text) => setCart(cart.map(i => i.id === id ? { ...i, note: text } : i));
-            const remove = (id) => setCart(cart.filter(i => i.id !== id));
-            const total = () => cart.reduce((s, i) => s + i.selectedPrice, 0);
+            const updateQty = (key, delta) => {
+                setCart(cart.map(i => `${i.name}-${i.selectedSize}` === key ? { ...i, qty: Math.max(1, i.qty + delta) } : i));
+            };
+
+            const remove = (key) => setCart(cart.filter(i => `${i.name}-${i.selectedSize}` !== key));
 
             const sendWhatsApp = () => {
-                if (!client.name || !client.address) return alert("الاسم والعنوان مطلوبين!");
-                let orderID = Math.floor(Math.random() * 9000) + 1000;
-                let msg = `🛍️ *طلب جديد من مطعم العم فريد*\n`;
-                msg += `رقم الطلب: ${orderID}\n`;
+                if (!client.name || !client.phone || !client.address || !client.loc) {
+                    return alert("يرجى إكمال جميع البيانات: الاسم، الموبايل، العنوان، ورابط اللوكيشن 📍");
+                }
+                
+                let msg = `🛍️ *طلب جديد - مطعم العم فريد*\n`;
+                msg += `رقم الفاتورة: #${String(lastOrderNum).padStart(4, '0')}\n`;
                 msg += `------------------------------\n`;
                 cart.forEach((item, i) => {
                     msg += `${i+1}. *${item.name}* ${item.selectedSize ? `(${item.selectedSize})` : ''}\n`;
-                    msg += `   السعر: ${item.selectedPrice} ج.م\n`;
+                    msg += `   الكمية: ${item.qty} | السعر: ${item.selectedPrice * item.qty} ج\n`;
                     if(item.note) msg += `   📝 ملاحظة: ${item.note}\n`;
                 });
                 msg += `------------------------------\n`;
-                msg += `💰 *الإجمالي:* ${total()} ج.م\n\n`;
+                msg += `💰 *الإجمالي:* ${cart.reduce((s,i)=>s+(i.selectedPrice*i.qty),0)} ج.م\n\n`;
                 msg += `👤 *العميل:* ${client.name}\n`;
+                msg += `📞 *الموبايل:* ${client.phone}\n`;
                 msg += `🏠 *العنوان:* ${client.address}\n`;
-                if(client.loc) msg += `📍 *الموقع:* ${client.loc}\n`;
+                msg += `📍 *اللوكيشن:* ${client.loc}\n`;
+                
+                setLastOrderNum(prev => prev + 1);
                 window.open(`https://wa.me/${menuData.contact.whatsapp}?text=${encodeURIComponent(msg)}`);
             };
 
             return (
-                <div className="max-w-md mx-auto min-h-screen pb-24">
-                    {/* PWA Message */}
-                    {pwaMsg && (
-                        <div className="fixed inset-x-0 bottom-24 z-50 px-4 animate-up">
-                            <div className="bg-white border-2 border-[#9E4624] p-5 rounded-[2.5rem] shadow-2xl relative">
-                                <button onClick={() => setPwaMsg(false)} className="absolute top-4 left-6 text-gray-400">✕</button>
-                                <div className="flex items-center gap-4">
-                                    <img src="3am Farid.png" className="w-14 h-14 rounded-2xl" />
-                                    <div>
-                                        <p className="text-sm font-black text-[#9E4624]">تثبيت تطبيق العم فريد 📲</p>
-                                        <p className="text-[11px] text-gray-500 leading-tight">اضغط على زر "مشاركة" ثم اختر "إضافة إلى الشاشة الرئيسية" لطلب أسهل.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Header */}
-                    <div className="bg-[#9E4624] text-white p-10 text-center rounded-b-[4rem] shadow-xl">
-                        <img src="3am Farid.png" className="w-28 h-28 mx-auto mb-4 border-4 border-white rounded-full bg-white" />
+                <div className="max-w-md mx-auto min-h-screen">
+                    <header className="bg-[#9E4624] text-white p-8 text-center rounded-b-[3rem] shadow-lg">
                         <h1 className="text-3xl font-black italic">العم فريد</h1>
-                    </div>
+                        <p className="text-xs mt-2 opacity-80 underline">6 أكتوبر - الحي الأول</p>
+                    </header>
 
-                    <div className="p-6 mt-4">
-                        {/* Main Grid */}
+                    <main className="p-4">
                         {activeTab === 'home' && (
-                            <div className="grid grid-cols-2 gap-5">
+                            <div className="grid grid-cols-2 gap-4 mt-2">
                                 {menuData.sections.map(s => (
-                                    <div key={s.id} onClick={() => setActiveTab(s.id)} className="category-card p-8 flex flex-col items-center justify-center">
-                                        <span className="text-5xl mb-3">{s.icon}</span>
-                                        <span className="font-black text-gray-800 text-sm">{s.name}</span>
+                                    <div key={s.id} onClick={() => setActiveTab(s.id)} className="category-card p-6 flex flex-col items-center justify-center">
+                                        <span className="text-4xl mb-2">{s.icon}</span>
+                                        <span className="font-bold text-gray-800 text-sm">{s.name}</span>
                                     </div>
                                 ))}
                             </div>
                         )}
 
-                        {/* Section View */}
                         {menuData.sections.some(s => s.id === activeTab) && (
-                            <div>
-                                <button onClick={() => setActiveTab('home')} className="mb-6 font-bold text-[#9E4624]">← العودة للقائمة</button>
-                                <h2 className="text-2xl font-black mb-6 text-[#9E4624] border-r-4 border-[#9E4624] pr-3">{menuData.sections.find(s=>s.id===activeTab).name}</h2>
+                            <div className="animate-fadeIn">
+                                <button onClick={() => setActiveTab('home')} className="mb-4 text-[#9E4624] font-bold">← القائمة</button>
                                 {menuData.sections.find(s=>s.id===activeTab).items.map((item, i) => (
-                                    <div key={i} className="bg-white p-5 rounded-[2rem] shadow-sm mb-4">
-                                        <div className="font-black text-lg text-gray-800">{item.name}</div>
-                                        {item.desc && <div className="text-[10px] text-gray-400 mt-1 mb-3">{item.desc}</div>}
-                                        <div className="flex flex-wrap gap-2 mt-3">
+                                    <div key={i} className="bg-white p-4 rounded-2xl shadow-sm mb-3 border-r-4 border-[#9E4624]">
+                                        <div className="font-black text-gray-800">{item.name}</div>
+                                        {item.desc && <div className="text-[10px] text-gray-400 mb-2">{item.desc}</div>}
+                                        <div className="flex flex-row gap-2 mt-2">
                                             {item.prices ? Object.entries(item.prices).map(([sz, p]) => (
-                                                <button key={sz} onClick={() => addToCart(item, p, sz)} className="bg-[#F7E5CF] text-[#9E4624] px-4 py-2 rounded-xl text-xs font-black border border-[#9E4624]/20">
-                                                    {sz==='s'?'صغير':sz==='m'?'وسط':'كبير'} : {p}ج
+                                                <button key={sz} onClick={() => addToCart(item, p, sz)} 
+                                                    className={`${addedId === `${item.name}-${sz}` ? 'bg-green-500 text-white scale-95' : 'bg-[#F1DCC2] text-[#9E4624]'} flex-1 py-2 rounded-xl text-[10px] font-black transition-all`}>
+                                                    {addedId === `${item.name}-${sz}` ? 'تم ✅' : `${sz==='s'?'صغير':sz==='m'?'وسط':'كبير'}: ${p}ج`}
                                                 </button>
                                             )) : (
-                                                <button onClick={() => addToCart(item, item.price)} className="bg-[#9E4624] text-white px-8 py-2 rounded-xl font-black">
-                                                    إضافة {item.price} ج.م
+                                                <button onClick={() => addToCart(item, item.price)} 
+                                                    className={`${addedId === `${item.name}-` ? 'bg-green-500 text-white' : 'bg-[#9E4624] text-white'} w-full py-2 rounded-xl font-bold transition-all`}>
+                                                    {addedId === `${item.name}-` ? 'أضيف للسلة ✅' : `إضافة ${item.price} ج`}
                                                 </button>
                                             )}
                                         </div>
@@ -222,65 +201,59 @@
                             </div>
                         )}
 
-                        {/* Cart View */}
                         {activeTab === 'cart' && (
-                            <div>
-                                <h2 className="text-2xl font-black mb-6 text-[#9E4624]">سلة طلباتك 🛒</h2>
-                                {cart.length === 0 ? <p className="text-center py-20 text-gray-400">السلة فاضية.. اطلب دلوقتي!</p> : (
-                                    <>
-                                        {cart.map(item => (
-                                            <div key={item.id} className="bg-white p-4 rounded-2xl mb-4 shadow-sm">
-                                                <div className="flex justify-between font-black text-gray-800">
-                                                    <span>{item.name} {item.selectedSize && `(${item.selectedSize})`}</span>
-                                                    <button onClick={() => remove(item.id)} className="text-red-500 text-xs">حذف</button>
+                            <div className="text-sm">
+                                <h2 className="text-xl font-black mb-4 text-[#9E4624]">طلباتك 🛒</h2>
+                                {cart.map(item => {
+                                    const key = `${item.name}-${item.selectedSize}`;
+                                    return (
+                                        <div key={key} className="bg-white p-3 rounded-xl mb-2 shadow-sm border border-gray-100 scale-95">
+                                            <div className="flex justify-between font-bold">
+                                                <span>{item.name} {item.selectedSize && `(${item.selectedSize})`}</span>
+                                                <div className="flex items-center gap-3 bg-gray-50 px-2 rounded-lg">
+                                                    <button onClick={()=>updateQty(key, -1)} className="text-[#9E4624] font-black">-</button>
+                                                    <span className="text-xs">{item.qty}</span>
+                                                    <button onClick={()=>updateQty(key, 1)} className="text-[#9E4624] font-black">+</button>
                                                 </div>
-                                                <textarea placeholder="أضف ملاحظاتك هنا..." className="w-full mt-3 p-2 bg-gray-50 rounded-xl text-xs border-none" onChange={e => updateNote(item.id, e.target.value)} />
-                                                <div className="text-left font-black text-[#9E4624] mt-2">{item.selectedPrice} ج.م</div>
                                             </div>
-                                        ))}
-                                        <div className="bg-white p-6 rounded-[2.5rem] mt-8 shadow-xl border-2 border-[#9E4624]">
-                                            <input placeholder="الاسم" className="w-full mb-3 p-3 rounded-xl bg-gray-50 border-none" onChange={e=>setClient({...client, name: e.target.value})} />
-                                            <input placeholder="العنوان بالتفصيل" className="w-full mb-3 p-3 rounded-xl bg-gray-50 border-none" onChange={e=>setClient({...client, address: e.target.value})} />
-                                            <input placeholder="رابط الموقع (اختياري)" className="w-full mb-6 p-3 rounded-xl bg-gray-50 border-none" onChange={e=>setClient({...client, loc: e.target.value})} />
-                                            <div className="flex justify-between text-xl font-black mb-6 border-t pt-4"><span>الإجمالي:</span><span>{total()} ج.م</span></div>
-                                            <button onClick={sendWhatsApp} className="w-full bg-[#25D366] text-white py-4 rounded-2xl font-black text-xl shadow-lg">أرسل الطلب للواتساب ✅</button>
+                                            <textarea placeholder="ملاحظات..." className="w-full mt-2 p-2 bg-gray-50 rounded text-[10px] h-8 border-none" 
+                                                onChange={e => setCart(cart.map(i=>`${i.name}-${i.selectedSize}`===key?{...i, note: e.target.value}:i))} />
+                                            <div className="flex justify-between items-center mt-1">
+                                                <span className="text-[#9E4624] font-black">{item.selectedPrice * item.qty}ج</span>
+                                                <button onClick={()=>remove(key)} className="text-red-400 text-[10px]">حذف</button>
+                                            </div>
                                         </div>
-                                    </>
+                                    );
+                                })}
+                                {cart.length > 0 && (
+                                    <div className="bg-white p-5 rounded-3xl mt-4 shadow-xl border-t-4 border-[#9E4624]">
+                                        <input placeholder="الاسم" className="w-full mb-2 p-2 rounded-lg bg-gray-50 border-none" onChange={e=>setClient({...client, name: e.target.value})} />
+                                        <input placeholder="الموبايل" type="tel" className="w-full mb-2 p-2 rounded-lg bg-gray-50 border-none" onChange={e=>setClient({...client, phone: e.target.value})} />
+                                        <input placeholder="العنوان بالتفصيل" className="w-full mb-2 p-2 rounded-lg bg-gray-50 border-none" onChange={e=>setClient({...client, address: e.target.value})} />
+                                        <input placeholder="رابط اللوكيشن (Google Maps)" className="w-full mb-4 p-2 rounded-lg bg-gray-50 border-2 border-dashed border-[#9E4624]/30 text-xs" onChange={e=>setClient({...client, loc: e.target.value})} />
+                                        <div className="flex justify-between font-black text-lg mb-4"><span>الإجمالي:</span><span>{cart.reduce((s,i)=>s+(i.selectedPrice*i.qty),0)} ج</span></div>
+                                        <button onClick={sendWhatsApp} className="w-full bg-[#25D366] text-white py-4 rounded-xl font-black shadow-lg">إرسال الطلب (واتساب) ✅</button>
+                                    </div>
                                 )}
                             </div>
                         )}
 
-                        {/* Contact View */}
                         {activeTab === 'contact' && (
-                            <div className="text-center py-10">
-                                <img src="3am Farid.png" className="w-32 h-32 mx-auto mb-6 rounded-full shadow-2xl p-2 bg-white" />
-                                <h2 className="text-3xl font-black text-[#9E4624] mb-2">تواصل معنا</h2>
-                                <p className="text-gray-500 italic mb-8">"أحلى فطيرة بيتزا من إيد العم فريد"</p>
-                                <div className="bg-white p-8 rounded-[3rem] shadow-md border-t-8 border-[#9E4624]">
-                                    <p className="font-black mb-2 text-gray-800 underline">📍 عنوانا:</p>
-                                    <p className="text-sm text-gray-500 leading-relaxed">{menuData.contact.address}</p>
-                                    <div className="flex gap-4 mt-8">
-                                        <a href="tel:01113338098" className="flex-1 bg-blue-500 text-white py-4 rounded-2xl font-bold">اتصل بنا</a>
-                                        <a href={`https://wa.me/${menuData.contact.whatsapp}`} className="flex-1 bg-[#25D366] text-white py-4 rounded-2xl font-bold">واتساب</a>
-                                    </div>
-                                </div>
+                            <div className="text-center py-10 bg-white rounded-3xl p-6 shadow-sm">
+                                <h2 className="text-2xl font-black text-[#9E4624] mb-4 text-right">📍 نورنا في مطعمنا</h2>
+                                <p className="text-right text-gray-600 mb-6 leading-relaxed">{menuData.contact.address}<br/>أمام المعهد الديني</p>
+                                <a href={`https://wa.me/${menuData.contact.whatsapp}`} className="block bg-[#25D366] text-white py-4 rounded-2xl font-black">واتساب المبيعات</a>
                             </div>
                         )}
-                    </div>
+                    </main>
 
-                    {/* Bottom Navbar */}
-                    <div className="fixed bottom-0 inset-x-0 bg-white/90 backdrop-blur-md flex justify-around py-4 border-t border-gray-100 shadow-[0_-10px_30px_rgba(0,0,0,0.05)] z-40">
-                        <button onClick={() => setActiveTab('home')} className={`nav-tab flex flex-col items-center flex-1 ${activeTab==='home'?'active text-[#9E4624]':'text-gray-400'}`}>
-                            <span className="text-2xl">🏠</span><span className="text-[10px] font-bold mt-1">الرئيسية</span>
+                    <nav className="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md flex justify-around py-4 border-t z-50 shadow-2xl">
+                        <button onClick={()=>setActiveTab('home')} className={`flex flex-col items-center flex-1 ${activeTab==='home'?'text-[#9E4624]':'text-gray-400'}`}>🏠<span className="text-[10px] font-bold">الرئيسية</span></button>
+                        <button onClick={()=>setActiveTab('cart')} className={`flex flex-col items-center flex-1 relative ${activeTab==='cart'?'text-[#9E4624]':'text-gray-400'}`}>🛒<span className="text-[10px] font-bold">السلة</span>
+                            {cart.length > 0 && <span className="absolute -top-1 right-1/4 bg-red-500 text-white text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-black animate-bounce">{cart.length}</span>}
                         </button>
-                        <button onClick={() => setActiveTab('cart')} className={`nav-tab flex flex-col items-center flex-1 relative ${activeTab==='cart'?'active text-[#9E4624]':'text-gray-400'}`}>
-                            <span className="text-2xl">🛒</span><span className="text-[10px] font-bold mt-1">السلة</span>
-                            {cart.length > 0 && <span className="absolute top-0 right-1/4 bg-red-500 text-white text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-black">{cart.length}</span>}
-                        </button>
-                        <button onClick={() => setActiveTab('contact')} className={`nav-tab flex flex-col items-center flex-1 ${activeTab==='contact'?'active text-[#9E4624]':'text-gray-400'}`}>
-                            <span className="text-2xl">📞</span><span className="text-[10px] font-bold mt-1">تواصل معنا</span>
-                        </button>
-                    </div>
+                        <button onClick={()=>setActiveTab('contact')} className={`flex flex-col items-center flex-1 ${activeTab==='contact'?'text-[#9E4624]':'text-gray-400'}`}>📞<span className="text-[10px] font-bold">تواصل معنا</span></button>
+                    </nav>
                 </div>
             );
         }
